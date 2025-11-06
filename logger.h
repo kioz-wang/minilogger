@@ -64,15 +64,15 @@ typedef void (*mlogger_f)(const char *msg);
 #define MLOGGER_PREFIX _
 #define MLOGGER_FUNC(name) __MLOGGER_FUNC__(MLOGGER_PREFIX, name)
 
-void MLOGGER_FUNC(logger)(mlog_level_t lvl, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
+void MLOGGER_FUNC(logf)(mlog_level_t lvl, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
 void MLOGGER_FUNC(set_logger)(mlog_level_t lvl, mlogger_f f);
 void MLOGGER_FUNC(set_out_logger)(void (*f)(mlog_level_t, mlogger_f));
 
-#define logfE(fmt, ...) MLOGGER_FUNC(logger)(MLOG_ERROR, fmt "\n", ##__VA_ARGS__)
-#define logfW(fmt, ...) MLOGGER_FUNC(logger)(MLOG_WARN, fmt "\n", ##__VA_ARGS__)
-#define logfI(fmt, ...) MLOGGER_FUNC(logger)(MLOG_INFO, fmt "\n", ##__VA_ARGS__)
-#define logfV(fmt, ...) MLOGGER_FUNC(logger)(MLOG_VERB, fmt "\n", ##__VA_ARGS__)
-#define logfD(fmt, ...) MLOGGER_FUNC(logger)(MLOG_DEBUG, fmt "\n", ##__VA_ARGS__)
+#define logfE(fmt, ...) MLOGGER_FUNC(logf)(MLOG_ERROR, fmt "\n", ##__VA_ARGS__)
+#define logfW(fmt, ...) MLOGGER_FUNC(logf)(MLOG_WARN, fmt "\n", ##__VA_ARGS__)
+#define logfI(fmt, ...) MLOGGER_FUNC(logf)(MLOG_INFO, fmt "\n", ##__VA_ARGS__)
+#define logfV(fmt, ...) MLOGGER_FUNC(logf)(MLOG_VERB, fmt "\n", ##__VA_ARGS__)
+#define logfD(fmt, ...) MLOGGER_FUNC(logf)(MLOG_DEBUG, fmt "\n", ##__VA_ARGS__)
 
 #ifdef __cplusplus
 }

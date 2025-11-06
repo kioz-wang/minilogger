@@ -81,7 +81,7 @@ static int32_t check_stderr_level() {
   return value;
 }
 
-static void logger(mlog_level_t lvl, const char *fmt, ...) {
+static void logf__(mlog_level_t lvl, const char *fmt, ...) {
   va_list args;
   va_start(args, fmt);
 
@@ -108,7 +108,7 @@ static void set_logger(mlog_level_t lvl, mlogger_f f) {
 
 static void set_out_logger(void (*f)(mlog_level_t, mlogger_f)) { f(g_log_level, g_logger); }
 
-void MLOGGER_FUNC(logger)(mlog_level_t lvl, const char *fmt, ...) __attribute__((alias("logger")));
+void MLOGGER_FUNC(logf)(mlog_level_t lvl, const char *fmt, ...) __attribute__((alias("logf__")));
 void MLOGGER_FUNC(set_logger)(mlog_level_t lvl, mlogger_f f) __attribute__((alias("set_logger")));
 void MLOGGER_FUNC(set_out_logger)(void (*f)(mlog_level_t, mlogger_f)) __attribute__((alias("set_out_logger")));
 
@@ -117,7 +117,7 @@ void MLOGGER_FUNC(set_out_logger)(void (*f)(mlog_level_t, mlogger_f)) __attribut
 int32_t main(int32_t argc, const char *argv[]) {
   set_logger(MLOG_INFO, NULL);
   for (int32_t i = 0; i < MLOG_DEBUG + 1; i++) {
-    logger(i, "message level %s\n", log_level_names[i]);
+    logf__(i, "message level %s\n", log_level_names[i]);
   }
 }
 

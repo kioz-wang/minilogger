@@ -54,10 +54,10 @@ typedef void (*mlogger_f)(const char *msg);
 - 日志等级：`g_log_level`，默认为 `MLOG_DEBUG`
 - 输出函数：`g_logger`，默认为 `fputs(msg, stdout)`
 
-## `MLOGGER_FUNC(logger)`
+## `MLOGGER_FUNC(logf)`
 
 ```c
-void MLOGGER_FUNC(logger)(mlog_level_t lvl, const char *fmt, ...);
+void MLOGGER_FUNC(logf)(mlog_level_t lvl, const char *fmt, ...);
 ```
 
 当 `lvl` 大于等于 `g_log_level` 时，调用 `g_logger` 输出格式化消息。
@@ -84,7 +84,7 @@ void MLOGGER_FUNC(set_out_logger)(void (*f)(mlog_level_t, mlogger_f));
 
 ## `MLOGGER_PREFIX`
 
-为避免移植时出现符号冲突（像`logger`这种名字太常见了），请在头文件中修改宏定义。
+为避免移植时出现符号冲突（像`logf`这种名字太常见了），请在头文件中修改宏定义。
 
 > 默认值为 `_`
 
@@ -96,9 +96,9 @@ void MLOGGER_FUNC(set_out_logger)(void (*f)(mlog_level_t, mlogger_f));
 
 ## `MLOGGER_ENV`
 
-这个宏指定了一个环境变量，`MLOGGER_FUNC(logger)` 将读取这个环境变量，并翻译为 `mlog_level_t stderr_level`。
+这个宏指定了一个环境变量，`MLOGGER_FUNC(logf)` 将读取这个环境变量，并翻译为 `mlog_level_t stderr_level`。
 
-在 `MLOGGER_FUNC(logger)` 中，当 `lvl` 大于等于 `stderr_level` 时，调用 `fputs(line, stderr)` 输出格式化消息。
+在 `MLOGGER_FUNC(logf)` 中，当 `lvl` 大于等于 `stderr_level` 时，调用 `fputs(line, stderr)` 输出格式化消息。
 
 ### 翻译规则
 
