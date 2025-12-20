@@ -9,20 +9,34 @@
 ## Test and Run
 
 ```shell
-$ rm -f *.gch *.o a.out && gcc -D__TEST_LOGGER__ -DMLOGGER_ENV=\"log2stderr\" *.[ch]
-$ ./a.out 
-message level ERROR
+$ rm -f *.gch *.o a.out && gcc -D__TEST_LOGGER__ -DMLOGGER_ENV=\"log2stderr\" -DMLOGGER_COLOR -DMLOGGER_TIMESTAMP -DMLOGGER_LEVEL *.[ch]
+$ ./a.out
+message level ERRO
 message level WARN
 message level INFO
+
+[2e71497f8][E]ERRO
+[2e71497ff][W]WARN
+[2e7149801][I]INFO
 $ log2stderr=DEBUG ./a.out
-message level ERROR
-message level ERROR
+message level ERRO
+message level ERRO
 message level WARN
 message level WARN
 message level INFO
 message level INFO
 message level VERB
-message level DEBUG
+message level DEBG
+
+
+[2e78c987a][E]ERRO
+[2e78c987a][E]ERRO
+[2e78c9880][W]WARN
+[2e78c9880][W]WARN
+[2e78c9882][I]INFO
+[2e78c9882][I]INFO
+[2e78c9885][V]VERB
+[2e78c9886][D]DEBG
 ```
 
 ## Build as library
@@ -39,11 +53,11 @@ This is a best practice.
 
 ```c
 enum mlog_level {
-  MLOG_ERROR,
+  MLOG_ERRO,
   MLOG_WARN,
   MLOG_INFO,
   MLOG_VERB,
-  MLOG_DEBUG,
+  MLOG_DEBG,
 };
 typedef uint8_t mlog_level_t;
 
@@ -53,6 +67,14 @@ typedef void (*mlogger_f)(const char *msg);
 仅使用两个全局变量：
 - 日志等级：`g_log_level`，默认为 `MLOG_DEBUG`
 - 输出函数：`g_logger`，默认为 `fputs(msg, stdout)`
+
+## `mlog_level_parse`
+
+```c
+mlog_level_t mlog_level_parse(const char *s);
+```
+
+解析字符串到 `mlog_level_t`，一般用在命令行解析函数中。
 
 ## `MLOGGER_FUNC(logf)`
 
@@ -100,15 +122,23 @@ void MLOGGER_FUNC(set_out_logger)(void (*f)(mlog_level_t, mlogger_f));
 
 在 `MLOGGER_FUNC(logf)` 中，当 `lvl` 大于等于 `stderr_level` 时，调用 `fputs(line, stderr)` 输出格式化消息。
 
+## 仅对 `logfE/W/I/V/D` 有效的
+
+> 以下配置可根据需要修改头文件
+
+- `MLOGGER_COLOR` 使能颜色
+- `MLOGGER_TIMESTAMP` 开头显示时间戳：十六进制 monotonic 时间，单位：ms
+- `MLOGGER_LEVEL` 开头显示日志等级：`[E/W/I/V/D]`
+
 ### 翻译规则
 
 单词
 
-`"ERROR", "WARN", "INFO", "VERB", "DEBUG"` 依次对应 `mlog_level_t` 枚举值。不匹配的单词将按照数字翻译。
+`"ERRO", "WARN", "INFO", "VERB", "DEBG"` 依次对应 `mlog_level_t` 枚举值。不匹配的单词将按照数字翻译。
 
 数字
 
 - 自动推断进制
 - 按数值大小一一映射到 `mlog_level_t` 枚举值。
-- 非法数字将映射到 `MLOG_DEBUG`
-- 过大的数字将映射到 `MLOG_DEBUG`
+- 非法数字将映射到 `MLOG_DEBG`
+- 过大的数字将映射到 `MLOG_DEBG`
