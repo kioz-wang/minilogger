@@ -94,7 +94,7 @@ static void logf__(mlog_level_t lvl, const char *fmt, ...) {
 
     if ((stderr_level >= 0 && lvl <= stderr_level) || lvl <= g_log_level) {
         char line[MLOGGER_FMT_MAX] = {0};
-        (void)vsnprintf(line, sizeof(line) - 1, fmt, args);
+        (void)vsnprintf(line, sizeof(line), fmt, args);
 
         if (stderr_level >= 0 && lvl <= stderr_level) fputs(line, stderr);
         if (lvl <= g_log_level) g_logger(line);
