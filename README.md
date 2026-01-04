@@ -14,7 +14,7 @@ $ ./a.out
 [E]hello world
 [W]hello world
 [I]hello world
-$ log2stderr=99 ./a.out 
+$ log2stderr=99 ./a.out
 [4fa25cf261][E]hello world
 [E]hello world
 [4fa25cf290][W]hello world

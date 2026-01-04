@@ -116,7 +116,7 @@ void mlog_enable_stderr(mlogger_t *mlogger, mlog_level_t level);
  * @param fmt
  * @param ...
  */
-void mlogf(mlogger_t *mlogger, mlog_level_t level, const char *fmt, ...);
+void mlogf(mlogger_t *mlogger, mlog_level_t level, const char *fmt, ...) __attribute__((format(printf, 3, 4)));
 
 #ifdef __cplusplus
 }
