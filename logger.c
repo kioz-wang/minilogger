@@ -134,7 +134,7 @@ static void mlog_format(uint8_t cfg, mlog_level_t level, char *restrict __s, siz
 
     assert(__maxlen - pos);
     int n = vsnprintf(&__s[pos], __maxlen - pos, __format, __arg);
-    if (n < __maxlen - pos) pos += n;
+    if (n < (int)__maxlen - pos) pos += n;
     else pos = __maxlen;
 
     if (cfg & MLOG_FMT_COLOR) pos += sprintf(&__s[pos], "%s", color_reset);
@@ -162,12 +162,12 @@ void mlogf(mlogger_t *mlogger, mlog_level_t level, const char *fmt, ...) {
 
 #ifdef __TEST_LOGGER__
 
-int32_t main(int32_t argc, const char *argv[]) {
+int32_t main(void) {
     mlogger_t mlogger;
 
     mlog_init(&mlogger, NULL, "log2stderr", MLOG_FMT_LEVEL_HEAD,
               MLOG_FMT_COLOR | MLOG_FMT_TIMESTAMP | MLOG_FMT_LEVEL_HEAD | MLOG_FMT_NEWLINE);
-    mlog_set_logger(&mlogger, MLOG_INFO, (mlog_f)puts);
+    mlog_set_logger(&mlogger, MLOG_INFO, (mlog_f)(void *)puts);
 
     for (int32_t i = 0; i < MLOG_DEBG + 1; i++) {
         mlogf(&mlogger, i, "hello %s", "world");
