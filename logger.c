@@ -72,10 +72,10 @@ static bool mlog_level_parse_env(const char *envname, mlog_level_t *level) {
     return false;
 }
 
-void mlog_init(mlogger_t *mlogger, const char *envname, const char *envname_stderr, uint8_t fmt_cfg,
-               uint8_t fmt_cfg_stderr) {
-    mlogger->level = MLOG_ERRO;
-    mlogger->f     = NULL;
+void mlog_init(mlogger_t *mlogger, mlog_level_t level, mlog_f f, const char *envname, uint8_t fmt_cfg,
+               const char *envname_stderr, uint8_t fmt_cfg_stderr) {
+    mlogger->level = level > MLOG_DEBG ? MLOG_DEBG : level;
+    mlogger->f     = f;
     mlog_level_parse_env(envname, &mlogger->level);
     mlogger->enable_stderr  = mlog_level_parse_env(envname_stderr, &mlogger->level_stderr);
     mlogger->fmt_cfg        = fmt_cfg;
@@ -101,14 +101,14 @@ void mlog_enable_stderr(mlogger_t *mlogger, mlog_level_t level) {
 #endif
 
 static const char *colors[MLOG_DEBG + 1] = {
-    "\e[31m",               /* 红 */
-    "\e[33m",               /* 黄 */
-    "\e[32m",               /* 绿 */
-    "\e[38;2;100;150;100m", /* 浅绿 */
-    "\e[90m",               /* 灰 */
+    "\033[31m",               /* 红 */
+    "\033[33m",               /* 黄 */
+    "\033[32m",               /* 绿 */
+    "\033[38;2;100;150;100m", /* 浅绿 */
+    "\033[90m",               /* 灰 */
 };
-#define color_reset "\e[0m"
-#define color_bold  "\e[1m"
+#define color_reset "\033[0m"
+#define color_bold  "\033[1m"
 
 static const char *level_heads[MLOG_DEBG + 1] = {
     "[E]", "[W]", "[I]", "[V]", "[D]",
@@ -165,9 +165,8 @@ void mlogf(mlogger_t *mlogger, mlog_level_t level, const char *fmt, ...) {
 int32_t main(void) {
     mlogger_t mlogger;
 
-    mlog_init(&mlogger, NULL, "log2stderr", MLOG_FMT_LEVEL_HEAD,
+    mlog_init(&mlogger, MLOG_INFO, (mlog_f)(void *)puts, NULL, MLOG_FMT_LEVEL_HEAD, "log2stderr",
               MLOG_FMT_COLOR | MLOG_FMT_TIMESTAMP | MLOG_FMT_LEVEL_HEAD | MLOG_FMT_NEWLINE);
-    mlog_set_logger(&mlogger, MLOG_INFO, (mlog_f)(void *)puts);
 
     for (int32_t i = 0; i < MLOG_DEBG + 1; i++) {
         mlogf(&mlogger, i, "hello %s", "world");

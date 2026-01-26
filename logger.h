@@ -80,16 +80,17 @@ typedef struct mlogger mlogger_t;
 
 /**
  * @brief 初始化 mlogger
- * @note 日志接口初始化为 NULL，此时实际不记录日志。需要通过 `mlog_set_logger` 设置。
  *
  * @param mlogger
- * @param envname 根据环境变量初始化日志等级（默认 MLOG_ERRO）
- * @param envname_stderr 根据环境变量使能 stderr 输出，并初始化日志等级（默认不输出）
+ * @param level 越界的将被降为 MLOG_DEBG
+ * @param f 日志接口（传入 NULL 时，不记录）
+ * @param envname 根据环境变量初始化日志等级，优先于 `level`
  * @param fmt_cfg 格式化配置（`MLOG_FMT_` 按位或）
+ * @param envname_stderr 根据环境变量使能 stderr 输出，并初始化日志等级（默认不输出）
  * @param fmt_cfg_stderr stderr 输出的格式化配置（`MLOG_FMT_` 按位或）
  */
-void mlog_init(mlogger_t *mlogger, const char *envname, const char *envname_stderr, uint8_t fmt_cfg,
-               uint8_t fmt_cfg_stderr);
+void mlog_init(mlogger_t *mlogger, mlog_level_t level, mlog_f f, const char *envname, uint8_t fmt_cfg,
+               const char *envname_stderr, uint8_t fmt_cfg_stderr);
 /**
  * @brief 设置日志等级和日志接口
  *
